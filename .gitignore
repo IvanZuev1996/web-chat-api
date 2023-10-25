@@ -1,0 +1,6 @@
+
+# dependencies
+/build
+idea
+node_modules
+.vercel

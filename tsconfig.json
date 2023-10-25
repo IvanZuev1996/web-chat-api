@@ -1,0 +1,23 @@
+{
+    "compilerOptions": {
+        "outDir": "./dist",
+        "noImplicitAny": true,
+        "target": "ESNext",
+        "module": "ESNext",
+        "allowJs": true,
+        "rootDir": "./",
+        "baseUrl": ".",
+        "strict": true,
+        "moduleResolution": "node",
+        "esModuleInterop": true,
+        "allowSyntheticDefaultImports": true
+    },
+    "ts-node": {
+        "compilerOptions": {
+            "module": "CommonJS"
+        },
+        "esm": true
+    },
+    "include": ["./src/**/*"],
+    "exclude": ["node_modules", "**/node_modules/*", "./dist/**/*"]
+}
