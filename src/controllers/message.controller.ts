@@ -2,11 +2,11 @@ import { Response, Request } from 'express';
 import db from '../db/db';
 
 export const createMessage = async (req: Request, res: Response) => {
-    const { text, userId } = req.body;
+    const { text, person_id } = req.body;
 
     const newMessage = await db.query(
         'INSERT INTO message (text, person_id) values ($1, $2) RETURNING *',
-        [text, userId]
+        [text, person_id]
     );
 
     res.status(200).json(newMessage.rows[0]);
