@@ -1,36 +1,52 @@
 import { Response, Request } from 'express';
 import db from '../db/db';
+import { StatusCodes } from 'http-status-codes';
 
-export const createUser = async (req: Request, res: Response) => {
+export const createUser = async (
+    req: Request,
+    res: Response,
+    next: (err?: any) => void
+) => {
     const { name } = req.body;
+    try {
+        const queryResult = await db.query(
+            'INSERT INTO person (name) values ($1) RETURNING id',
+            [name]
+        );
+        const newUser = queryResult.rows[0];
 
-    const query = {
-        text: 'SELECT * FROM person WHERE name = $1',
-        values: [name]
-    };
-    const { rows } = await db.query(query);
-
-    if (rows.length <= 0) {
-        return res.status(409).json({
-            error: 'Такого пользователя не существует'
-        });
+        return res.status(StatusCodes.OK).json(newUser);
+    } catch (error) {
+        return next(error);
     }
-
-    const newUser = await db.query(
-        'INSERT INTO person (name) values ($1) RETURNING *',
-        [name]
-    );
-
-    return res.status(200).json(newUser.rows[0]);
 };
 
-export const getUsers = async (req: Request, res: Response) => {
-    const users = await db.query('SELECT * FROM person');
-    res.json(users.rows);
+export const getUsers = async (
+    req: Request,
+    res: Response,
+    next: (err?: any) => void
+) => {
+    try {
+        const queryResult = await db.query('SELECT * FROM person');
+        const users = queryResult.rows;
+
+        return res.status(StatusCodes.OK).json(users);
+    } catch (error) {
+        return next(error);
+    }
 };
 
-export const deleteUserById = async (req: Request, res: Response) => {
-    const id = req.params.id;
-    const message = await db.query('DELETE FROM person where id = $1', [id]);
-    res.json(message.rows[0]);
+export const deleteUserById = async (
+    req: Request,
+    res: Response,
+    next: (err?: any) => void
+) => {
+    try {
+        const id = req.params.id;
+        await db.query('DELETE FROM person where id = $1', [id]);
+
+        return res.status(StatusCodes.OK).end();
+    } catch (error) {
+        return next(error);
+    }
 };

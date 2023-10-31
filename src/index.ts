@@ -3,14 +3,17 @@ import cors from 'cors';
 import router from './routes/index';
 import http from 'http';
 import { Server } from 'socket.io';
+import { errorHandler } from './middlewares/errorHandler';
 
-const app: Express = express();
 const port = 8000;
+const app: Express = express();
+const server = http.createServer(app);
 
 app.use(express.json());
 app.use(cors());
+app.use('/api', router());
+app.use(errorHandler);
 
-const server = http.createServer(app);
 const io = new Server(server, {
     cors: {
         origin: true,
@@ -30,8 +33,6 @@ io.on('connection', (socket) => {
         console.log('Disconnect...');
     });
 });
-
-app.use('/api', router());
 
 server.listen(port, () => {
     console.log(`[server]: Server is running at http://localhost:${port}`);

@@ -1,25 +1,52 @@
 import { Response, Request } from 'express';
 import db from '../db/db';
+import { StatusCodes } from 'http-status-codes';
 
-export const createMessage = async (req: Request, res: Response) => {
+export const createMessage = async (
+    req: Request,
+    res: Response,
+    next: (err?: any) => void
+) => {
     const { text, person_id } = req.body;
 
-    const newMessage = await db.query(
-        'INSERT INTO message (text, person_id) values ($1, $2) RETURNING *',
-        [text, person_id]
-    );
+    try {
+        const query =
+            'INSERT INTO message (text, person_id) values ($1, $2) RETURNING id';
+        const queryResult = await db.query(query, [text, person_id]);
+        const newMessage = queryResult.rows[0];
 
-    return res.status(200).json(newMessage.rows[0]);
+        return res.status(StatusCodes.OK).json(newMessage);
+    } catch (error) {
+        return next(error);
+    }
 };
 
-export const getMessages = async (req: Request, res: Response) => {
-    const queryResult = await db.query('SELECT * FROM message');
-    const messages = queryResult.rows;
-    return res.status(200).json(messages);
+export const getMessages = async (
+    req: Request,
+    res: Response,
+    next: (err?: any) => void
+) => {
+    try {
+        const queryResult = await db.query('SELECT * FROM message');
+        const messages = queryResult.rows;
+
+        return res.status(StatusCodes.OK).json(messages);
+    } catch (error) {
+        return next(error);
+    }
 };
 
-export const deleteMessageById = async (req: Request, res: Response) => {
-    const id = req.params.id;
-    await db.query('DELETE FROM message where id = $1', [id]);
-    return res.status(200);
+export const deleteMessageById = async (
+    req: Request,
+    res: Response,
+    next: (err?: any) => void
+) => {
+    try {
+        const id = req.params.id;
+        await db.query('DELETE FROM message where id = $1', [id]);
+
+        return res.status(StatusCodes.OK).end();
+    } catch (error) {
+        return next(error);
+    }
 };
