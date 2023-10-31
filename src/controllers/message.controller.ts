@@ -9,16 +9,17 @@ export const createMessage = async (req: Request, res: Response) => {
         [text, person_id]
     );
 
-    res.status(200).json(newMessage.rows[0]);
+    return res.status(200).json(newMessage.rows[0]);
 };
 
 export const getMessages = async (req: Request, res: Response) => {
-    const messages = await db.query('SELECT * FROM message');
-    res.json(messages.rows);
+    const queryResult = await db.query('SELECT * FROM message');
+    const messages = queryResult.rows;
+    return res.status(200).json(messages);
 };
 
 export const deleteMessageById = async (req: Request, res: Response) => {
     const id = req.params.id;
-    const message = await db.query('DELETE FROM message where id = $1', [id]);
-    res.json(message.rows[0]);
+    await db.query('DELETE FROM message where id = $1', [id]);
+    return res.status(200);
 };
