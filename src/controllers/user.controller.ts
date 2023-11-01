@@ -9,10 +9,18 @@ export const createUser = async (
 ) => {
     const { name } = req.body;
     try {
-        const queryResult = await db.query(
-            'INSERT INTO person (name) values ($1) RETURNING id',
-            [name]
-        );
+        const findPersonQuery = 'SELECT * FROM person WHERE name = $1 LIMIT 1';
+        const { rows } = await db.query(findPersonQuery, [name]);
+
+        if (rows?.length) {
+            return res.status(StatusCodes.NOT_FOUND).json({
+                error: 'Такого пользователь уже существует'
+            });
+        }
+
+        const insertPersonQuery =
+            'INSERT INTO person (name) values ($1) RETURNING id';
+        const queryResult = await db.query(insertPersonQuery, [name]);
         const newUser = queryResult.rows[0];
 
         return res.status(StatusCodes.OK).json(newUser);
