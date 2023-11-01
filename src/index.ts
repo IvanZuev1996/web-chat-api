@@ -29,6 +29,10 @@ io.on('connection', (socket) => {
         io.emit('get-messages', data);
     });
 
+    socket.on('typing', (data) => {
+        socket.broadcast.emit('usersTypingInfo', `${data.name} печатает...`);
+    });
+
     socket.on('disconnect', () => {
         console.log('Disconnect...');
     });

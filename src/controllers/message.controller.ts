@@ -27,7 +27,9 @@ export const getMessages = async (
     next: (err?: any) => void
 ) => {
     try {
-        const queryResult = await db.query('SELECT * FROM message');
+        const queryResult = await db.query(
+            'SELECT message.id, message.text, person.id AS person_id, person.name AS person_name FROM message JOIN person ON message.person_id = person.id'
+        );
         const messages = queryResult.rows;
 
         return res.status(StatusCodes.OK).json(messages);
