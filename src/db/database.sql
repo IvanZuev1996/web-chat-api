@@ -32,6 +32,6 @@ DECLARE
 BEGIN
   FOR i IN 1..150 LOOP
     person_id := (i % 3) + 1;
-    INSERT INTO message (text, person_id) VALUES ('Сообщение TEST ' || i, person_id);
+    INSERT INTO message (text, person_id) VALUES ('Сообщение ' || i, person_id);
   END LOOP;
 END $$;

@@ -8,13 +8,14 @@ export const createUser = async (
     next: (err?: any) => void
 ) => {
     const { name } = req.body;
+
     try {
         const findPersonQuery = 'SELECT * FROM person WHERE name = $1 LIMIT 1';
         const { rows } = await db.query(findPersonQuery, [name]);
 
         if (rows?.length) {
             return res.status(StatusCodes.NOT_FOUND).json({
-                error: 'Такого пользователь уже существует'
+                error: 'Такой пользователь уже существует'
             });
         }
 

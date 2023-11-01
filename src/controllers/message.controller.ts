@@ -22,15 +22,28 @@ export const createMessage = async (
 };
 
 export const getMessages = async (
-    req: Request,
+    req: Request<{}, {}, {}, { lastMessageId: number; limit: number }>,
     res: Response,
     next: (err?: any) => void
 ) => {
+    const { lastMessageId, limit } = req.query;
+
     try {
-        const queryResult = await db.query(
-            'SELECT message.id, message.text, person.id AS person_id, person.name AS person_name FROM message JOIN person ON message.person_id = person.id'
-        );
-        const messages = queryResult.rows;
+        const maxIdQueryResult = await db.query('SELECT MAX(id) FROM message');
+        const lastMessageIdFromDb = maxIdQueryResult.rows[0].max + 1;
+
+        const query =
+            'SELECT message.id, message.text, person.id AS person_id, person.name AS person_name ' +
+            'FROM message JOIN person ON message.person_id = person.id ' +
+            'WHERE message.id < $1 ' +
+            'ORDER BY message.id DESC ' +
+            `LIMIT ${limit}`;
+
+        const queryResult = await db.query(query, [
+            lastMessageId || lastMessageIdFromDb
+        ]);
+
+        const messages = queryResult.rows.reverse();
 
         return res.status(StatusCodes.OK).json(messages);
     } catch (error) {
