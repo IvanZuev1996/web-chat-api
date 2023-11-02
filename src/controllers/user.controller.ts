@@ -1,11 +1,11 @@
-import { Response, Request } from 'express';
+import { Response, Request, NextFunction } from 'express';
 import db from '../db/db';
 import { StatusCodes } from 'http-status-codes';
 
 export const createUser = async (
     req: Request,
     res: Response,
-    next: (err?: any) => void
+    next: NextFunction
 ) => {
     const { name } = req.body;
 
@@ -33,7 +33,7 @@ export const createUser = async (
 export const getUsers = async (
     req: Request,
     res: Response,
-    next: (err?: any) => void
+    next: NextFunction
 ) => {
     try {
         const queryResult = await db.query('SELECT * FROM person');
@@ -48,7 +48,7 @@ export const getUsers = async (
 export const deleteUserById = async (
     req: Request,
     res: Response,
-    next: (err?: any) => void
+    next: NextFunction
 ) => {
     try {
         const id = req.params.id;

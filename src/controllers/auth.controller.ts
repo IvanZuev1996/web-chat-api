@@ -1,11 +1,11 @@
-import { Response, Request } from 'express';
+import { Response, Request, NextFunction } from 'express';
 import db from '../db/db';
 import { StatusCodes } from 'http-status-codes';
 
 export const authByUsername = async (
     req: Request<{}, {}, { name: string }>,
     res: Response,
-    next: (err?: any) => void
+    next: NextFunction
 ) => {
     const { name } = req.body;
 

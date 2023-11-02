@@ -1,11 +1,11 @@
-import { Response, Request } from 'express';
+import { Response, Request, NextFunction } from 'express';
 import db from '../db/db';
 import { StatusCodes } from 'http-status-codes';
 
 export const createMessage = async (
     req: Request,
     res: Response,
-    next: (err?: any) => void
+    next: NextFunction
 ) => {
     const { text, person_id } = req.body;
 
@@ -24,7 +24,7 @@ export const createMessage = async (
 export const getMessages = async (
     req: Request<{}, {}, {}, { lastMessageId: number; limit: number }>,
     res: Response,
-    next: (err?: any) => void
+    next: NextFunction
 ) => {
     const { lastMessageId, limit } = req.query;
 
@@ -54,7 +54,7 @@ export const getMessages = async (
 export const deleteMessageById = async (
     req: Request,
     res: Response,
-    next: (err?: any) => void
+    next: NextFunction
 ) => {
     try {
         const id = req.params.id;
