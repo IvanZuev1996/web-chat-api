@@ -4,7 +4,6 @@
 idea
 node_modules
 .vercel
-dist
 .env
 end
 /.end
