@@ -2,8 +2,22 @@ import { Response, Request, NextFunction } from 'express';
 import db from '../db/db';
 import { StatusCodes } from 'http-status-codes';
 
+interface CreateMessageBodyProps {
+    text: string;
+    person_id: number;
+}
+
+interface GetMessagesBodyProps {
+    lastMessageId: number;
+    limit: number;
+}
+
+interface DeleteMessageByIdParamsProps {
+    id: string;
+}
+
 export const createMessage = async (
-    req: Request,
+    req: Request<{}, {}, CreateMessageBodyProps>,
     res: Response,
     next: NextFunction
 ) => {
@@ -22,7 +36,7 @@ export const createMessage = async (
 };
 
 export const getMessages = async (
-    req: Request<{}, {}, {}, { lastMessageId: number; limit: number }>,
+    req: Request<{}, {}, {}, GetMessagesBodyProps>,
     res: Response,
     next: NextFunction
 ) => {
@@ -52,7 +66,7 @@ export const getMessages = async (
 };
 
 export const deleteMessageById = async (
-    req: Request,
+    req: Request<DeleteMessageByIdParamsProps>,
     res: Response,
     next: NextFunction
 ) => {

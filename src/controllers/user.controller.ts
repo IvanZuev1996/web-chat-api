@@ -2,8 +2,16 @@ import { Response, Request, NextFunction } from 'express';
 import db from '../db/db';
 import { StatusCodes } from 'http-status-codes';
 
+interface CreateUserBodyProps {
+    name: string;
+}
+
+interface DeleteUserByIdParamsProps {
+    id: string;
+}
+
 export const createUser = async (
-    req: Request,
+    req: Request<{}, {}, CreateUserBodyProps>,
     res: Response,
     next: NextFunction
 ) => {
@@ -46,7 +54,7 @@ export const getUsers = async (
 };
 
 export const deleteUserById = async (
-    req: Request,
+    req: Request<DeleteUserByIdParamsProps>,
     res: Response,
     next: NextFunction
 ) => {

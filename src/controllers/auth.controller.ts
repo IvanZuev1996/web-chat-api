@@ -2,8 +2,12 @@ import { Response, Request, NextFunction } from 'express';
 import db from '../db/db';
 import { StatusCodes } from 'http-status-codes';
 
+interface AuthByUsernameBodyProps {
+    name: string;
+}
+
 export const authByUsername = async (
-    req: Request<{}, {}, { name: string }>,
+    req: Request<{}, {}, AuthByUsernameBodyProps>,
     res: Response,
     next: NextFunction
 ) => {
