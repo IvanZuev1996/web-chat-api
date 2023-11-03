@@ -1,6 +1,6 @@
-CREATE DATABASE web_chat_postgres2;
+CREATE DATABASE web_chat_postgres;
 
-\connect web_chat_postgres2
+\connect web_chat_postgres
 
 create TABLE person(
     id SERIAL PRIMARY KEY,
